@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_CLAS" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <VSEOCLASS>
+    <CLSNAME>ZCL_PROMISE</CLSNAME>
+    <LANGU>E</LANGU>
+    <DESCRIPT>ABAP promise polyfill</DESCRIPT>
+    <STATE>1</STATE>
+    <CLSCCINCL>X</CLSCCINCL>
+    <FIXPT>X</FIXPT>
+    <UNICODE>X</UNICODE>
+    <WITH_UNIT_TESTS>X</WITH_UNIT_TESTS>
+   </VSEOCLASS>
+   <DESCRIPTIONS>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_PROMISE</CLSNAME>
+     <CMPNAME>ALL</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Promise.all</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_PROMISE</CLSNAME>
+     <CMPNAME>CONSTRUCTOR</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>CONSTRUCTOR</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_PROMISE</CLSNAME>
+     <CMPNAME>REJECT</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Promise.reject</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_PROMISE</CLSNAME>
+     <CMPNAME>RESOLVE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Promise.resolve</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_PROMISE</CLSNAME>
+     <CMPNAME>RESOLVER</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Thenable object</DESCRIPT>
+    </SEOCOMPOTX>
+    <SEOCOMPOTX>
+     <CLSNAME>ZCL_PROMISE</CLSNAME>
+     <CMPNAME>STATE</CMPNAME>
+     <LANGU>E</LANGU>
+     <DESCRIPT>Promise state</DESCRIPT>
+    </SEOCOMPOTX>
+   </DESCRIPTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>

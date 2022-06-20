@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_FUGR" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <AREAT>Async/Await ABAP implementation</AREAT>
+   <INCLUDES>
+    <SOBJ_NAME>LZABAP_ASYNCTOP</SOBJ_NAME>
+    <SOBJ_NAME>SAPLZABAP_ASYNC</SOBJ_NAME>
+   </INCLUDES>
+   <FUNCTIONS>
+    <item>
+     <FUNCNAME>ZABAP_ASYNC_AWAIT</FUNCNAME>
+     <REMOTE_CALL>X</REMOTE_CALL>
+     <SHORT_TEXT>Async await</SHORT_TEXT>
+     <REMOTE_BASXML>X</REMOTE_BASXML>
+     <IMPORT>
+      <RSIMP>
+       <PARAMETER>FOR</PARAMETER>
+       <TYP>XSTRING</TYP>
+      </RSIMP>
+     </IMPORT>
+     <EXPORT>
+      <RSEXP>
+       <PARAMETER>WITH</PARAMETER>
+       <TYP>XSTRING</TYP>
+      </RSEXP>
+      <RSEXP>
+       <PARAMETER>STATE</PARAMETER>
+       <TYP>I</TYP>
+      </RSEXP>
+     </EXPORT>
+     <DOCUMENTATION>
+      <RSFDO>
+       <PARAMETER>FOR</PARAMETER>
+       <KIND>P</KIND>
+       <STEXT>note to payee string with foreign currency format</STEXT>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>WITH</PARAMETER>
+       <KIND>P</KIND>
+      </RSFDO>
+      <RSFDO>
+       <PARAMETER>STATE</PARAMETER>
+       <KIND>P</KIND>
+      </RSFDO>
+     </DOCUMENTATION>
+    </item>
+   </FUNCTIONS>
+  </asx:values>
+ </asx:abap>
+</abapGit>
