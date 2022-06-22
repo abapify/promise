@@ -5,7 +5,7 @@ function zabap_async_await.
 *"     VALUE(FOR) TYPE  XSTRING
 *"  EXPORTING
 *"     VALUE(WITH) TYPE  XSTRING
-*"     VALUE(STATE) TYPE  I
+*"     VALUE(STATE) TYPE  STRING
 *"----------------------------------------------------------------------
 
   data resolver type ref to zif_abap_thenable.
@@ -18,7 +18,7 @@ function zabap_async_await.
   try.
       data(result) = zcl_abap_sync=>await( for = resolver ).
 
-      state = zif_promise_state=>resolved.
+      state = zif_promise_state=>fulfilled.
 
     catch zcx_promise_rejected into data(lo_cx_rejected).  "
 
@@ -33,7 +33,7 @@ function zabap_async_await.
         result xml with
         options data_refs = 'heap-or-create'.
 
-      state = zif_promise_state=>unhandled_rejection.
+      state = zif_promise_state=>rejected.
 
   endtry.
 

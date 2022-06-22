@@ -59,9 +59,9 @@ CLASS ZCL_ABAP_SYNC IMPLEMENTATION.
               raise exception type zcx_promise_rejected
                 exporting
                   previous = lo_cx
-                  with     = state->with.
-            when state->resolved.
-              result = state->with.
+                  with     = state->result.
+            when state->fulfilled.
+              result = state->result.
               return.
           endcase.
 

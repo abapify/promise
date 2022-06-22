@@ -8,9 +8,9 @@ class lcx_promise_state_changed definition inheriting from cx_no_check.
     methods constructor importing with type ref to data.
   protected section.
 
-    aliases with for zif_promise_state~with.
+    aliases with for zif_promise_state~result.
     aliases state for zif_promise_state~state.
-    aliases resolved for zif_promise_state~resolved.
+    aliases resolved for zif_promise_state~fulfilled.
     aliases rejected for zif_promise_state~rejected.
 
   private section.

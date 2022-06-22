@@ -9,6 +9,7 @@ class ZCL_PROMISE_RESOLVER definition
 
 public section.
 
+  interfaces IF_SERIALIZABLE_OBJECT .
   interfaces ZIF_ABAP_THENABLE
       all methods abstract .
 

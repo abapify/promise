@@ -13,7 +13,8 @@ public section.
   aliases THEN
     for ZIF_PROMISE~THEN .
 
-  types RESULTS TYPE TABLE OF REF TO data WITH EMPTY KEY .
+  types:
+    RESULTS TYPE TABLE OF REF TO data WITH EMPTY KEY .
   types:
     PROMISES TYPE TABLE OF REF TO zcl_promise WITH EMPTY KEY .
 
@@ -38,7 +39,6 @@ public section.
 protected section.
 private section.
 
-  data RESOLVER type ref to ZIF_ABAP_THENABLE .
   data STATE type ref to ZIF_PROMISE_STATE .
 ENDCLASS.
 
@@ -59,10 +59,10 @@ CLASS ZCL_PROMISE IMPLEMENTATION.
     LOOP at promises INTO data(promise).
       CASE promise->state->state .
         WHEN zif_promise_state=>rejected.
-          result = reject( promise->state->with ).
+          result = reject( promise->state->result ).
           return.
         WHEN OTHERS.
-          APPEND promise->state->with to lt_results.
+          APPEND promise->state->result to lt_results.
       ENDCASE.
     ENDLOOP.
 
@@ -75,12 +75,13 @@ CLASS ZCL_PROMISE IMPLEMENTATION.
 
     super->constructor( ).
 
-    data(lo_resolver) = new lcl_promise_resolver( resolver ).
-
-    me->resolver = lo_resolver.
-    me->state = lo_resolver->state.
-
-    lo_resolver->then( ).
+    " Promise.resolve/Promise.reject support
+    try.
+        me->state = cast lcl_settled_promise( resolver )->state.
+      catch cx_sy_move_cast_error.
+        "create async task
+        me->state = new zcl_abap_async_task( resolver )->state.
+    endtry.
 
   endmethod.
 
@@ -92,7 +93,7 @@ CLASS ZCL_PROMISE IMPLEMENTATION.
   endmethod.
 
 
-  method RESOLVE.
+  method resolve.
 
     result = new zcl_promise( new lcl_resolved( ref=>from( with ) ) ).
 
@@ -101,20 +102,25 @@ CLASS ZCL_PROMISE IMPLEMENTATION.
 
   method zif_promise~then.
 
-    " triggering callbacks
+    " await for promise execution
     case state->state.
-      when state->resolved.
-        if handler is bound.
-          handler->on_fulfilled( with = state->with ).
-        endif.
-      when state->rejected.
-        if handler is bound.
-          handler->on_rejected( with = state->with ).
-        endif.
-*      when others.
-*        " if promise is still pending - something went wrongly
-*        raise exception type zcx_promise_not_resolved.
+      when state->pending.
+        try.
+            await( me ).
+          catch zcx_promise_rejected.
+            " this method should not raise exception but trigger needed callback
+        endtry.
     endcase.
+
+    " callbacks
+    if handler is bound.
+      case state->state.
+        when state->fulfilled.
+          handler->on_fulfilled( state->result ).
+        when state->rejected.
+          handler->on_rejected( state->result ).
+      endcase.
+    endif.
 
     " chaining support
     result = me.

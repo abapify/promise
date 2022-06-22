@@ -26,7 +26,7 @@
       </RSEXP>
       <RSEXP>
        <PARAMETER>STATE</PARAMETER>
-       <TYP>I</TYP>
+       <TYP>STRING</TYP>
       </RSEXP>
      </EXPORT>
      <DOCUMENTATION>

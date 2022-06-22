@@ -26,7 +26,7 @@ CLASS ZCL_ABAP_ASYNC IMPLEMENTATION.
 
         " direct thenable assignment
         try.
-            state = new lcl_async_task( cast #( for ) )->state.
+            state = new zcl_abap_async_task( cast #( for ) )->state.
           catch cx_sy_move_cast_error.
         endtry.
 
@@ -41,22 +41,12 @@ CLASS ZCL_ABAP_ASYNC IMPLEMENTATION.
     wait for asynchronous tasks until state->state ne state->pending.
 
     case state->state.
-      when state->resolved.
-        result = state->with.
+      when state->fulfilled.
+        result = state->result.
       when state->rejected.
         raise exception type zcx_promise_rejected
           exporting
-            with = state->with.
-      when state->unhandled_rejection.
-
-        try.
-            types cx_no_check_type type ref to cx_no_check.
-            data(lo_cx) = cast cx_no_check_type( state->with ).
-            raise exception lo_cx->* .
-          catch cx_sy_move_cast_error.
-            raise exception type zcx_promise_not_resolved.
-        endtry.
-
+            with = state->result.
     endcase.
 
   endmethod.
