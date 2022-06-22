@@ -1,0 +1,25 @@
+{
+  "name": "@abapify/promise",
+  "version": "1.0.0",
+  "description": "Promise Polyfill ABAP implementation",
+  "main": "index.js",
+  "scripts": {
+    "lint": "abaplint",
+    "unit": "piper gctsExecuteABAPQualityChecks",
+    "unit:dev": "dotenv-run-script unit",
+    "test": "npm run lint && npm run unit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.booking.com/finsys/abap/promise.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@abaplint/cli": "^2.91.4",
+    "@abaplint/transpiler-cli": "^2.0.44"
+  },
+  "devDependencies": {
+    "dotenv-run-script": "^0.2.0"
+  }
+}

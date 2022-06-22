@@ -1,0 +1,3 @@
+stages:
+  AUnit:
+    aUnitConfig: 'aUnitConfig.yml'
