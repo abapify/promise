@@ -56,5 +56,11 @@ You probably think, why we wouldn't just run `write 'OK'`
 
 The answer is in the following sequence diagram
 
+![zcl_promise](https://user-images.githubusercontent.com/6381507/175093547-7f5cd10e-3b64-400d-8f93-60a4e8de6328.svg)
 
+What promise class does during inititalization - is creating an asyncronous task with serialized resolver instance.
+Asyncronous task deserialises resolver and executes it. It may be time consuming operation, for example some calculation, query, or http request. So why won't let the rest of abap code work for something else?
+So when your code decides that it's time to get data from promise and only then actually triggers for wait statement. Once an asynctronous task is done by triggering resolve/reject method in your resolver instance  - it will serialize again the response and send back to your main session. 
+
+You may not see the desired effect for single operations - but for promise=>all call the effect can be huge!
 
