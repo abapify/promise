@@ -47,3 +47,22 @@ class lcx_promise_rejected implementation.
     me->state = rejected.
   endmethod.
 endclass.
+
+class ref definition abstract.
+  public section.
+    class-methods:
+      from importing from type any returning value(ref) type ref to data.
+endclass.
+
+class ref implementation.
+  method from.
+    try.
+        ref = cast #( from ).
+      catch cx_sy_move_cast_error.
+        "avoid loosing data due to freeing
+        CREATE DATA ref like from.
+        assign ref->* to FIELD-SYMBOL(<ref>).
+        <ref> = from.
+    endtry.
+  endmethod.
+endclass.

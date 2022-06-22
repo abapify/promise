@@ -52,13 +52,13 @@ CLASS ZCL_PROMISE_RESOLVER IMPLEMENTATION.
 
 
   method REJECT.
-    RAISE EXCEPTION TYPE lcx_promise_rejected EXPORTING with = ref #( with ).
+    RAISE EXCEPTION TYPE lcx_promise_rejected EXPORTING with = ref=>from( with ).
   endmethod.
 
 
   method RESOLVE.
 
-    RAISE EXCEPTION TYPE lcx_promise_resolved EXPORTING with = ref #( with ).
+    RAISE EXCEPTION TYPE lcx_promise_resolved EXPORTING with = ref=>from( with ).
 
   endmethod.
 ENDCLASS.
