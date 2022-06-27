@@ -116,7 +116,7 @@ START-OF-SELECTION.
 
 ## Other methods
 
-### Promise.all
+### Promise=>all
 
 Returns a new promise, resolved with array of promises results or rejected with a reason of the first rejected promise
 
