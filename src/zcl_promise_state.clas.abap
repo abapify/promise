@@ -49,6 +49,8 @@ CLASS ZCL_PROMISE_STATE IMPLEMENTATION.
     result = with.
     this = me.
 
+    RAISE event zif_promise_state~state_changed.
+
   endmethod.
 
 
@@ -57,5 +59,6 @@ CLASS ZCL_PROMISE_STATE IMPLEMENTATION.
     state = fulfilled.
     result = with.
     this = me.
+    RAISE event zif_promise_state~state_changed.
   endmethod.
 ENDCLASS.

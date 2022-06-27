@@ -1,13 +1,14 @@
-interface zif_promise_state
+interface ZIF_PROMISE_STATE
   public .
 
 
-  types state_type type string .
+  types STATE_TYPE type STRING .
 
-  constants pending type state_type value 'pending' ##NO_TEXT.
-  constants rejected type state_type value 'rejected' ##NO_TEXT.
-  constants fulfilled type state_type value 'fulfilled'  ##NO_TEXT.
+  constants PENDING type STATE_TYPE value 'pending' ##NO_TEXT.
+  constants REJECTED type STATE_TYPE value 'rejected' ##NO_TEXT.
+  constants FULFILLED type STATE_TYPE value 'fulfilled' ##NO_TEXT.
+  data STATE type STATE_TYPE read-only .
+  data RESULT type ref to DATA read-only .
 
-  data state type state_type read-only .
-  data result type ref to data read-only .
+  events STATE_CHANGED .
 endinterface.

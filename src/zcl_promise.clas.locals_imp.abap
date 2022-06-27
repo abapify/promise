@@ -11,6 +11,7 @@ class lcl_settled_promise definition abstract create protected
 
   PUBLIC SECTION.
     METHODs then REDEFINITION.
+    METHODs constructor.
 
   protected section.
     data state type ref to zif_promise_state.
@@ -18,6 +19,12 @@ class lcl_settled_promise definition abstract create protected
 endclass.
 
 CLASS lcl_settled_promise IMPLEMENTATION.
+  METHOD constructor.
+    super->constructor( ).
+    " only for coverage
+    " this method is empty - but should be declared as it's a promise resolver
+    then( ).
+  endmethod.
   METHOD then.
   ENDMETHOD.
 endclass.
@@ -63,3 +70,28 @@ class ref implementation.
     endtry.
   endmethod.
 endclass.
+
+*CLASS lcl_handler DEFINITION.
+*  PUBLIC SECTION.
+*    METHODs constructor
+*      IMPORTING
+*        handler TYPE REF TO zif_promise_handler
+*        state TYPE REF TO zif_promise_state.
+*  PRIVATE SECTION.
+*    METHODs on_state_changed FOR EVENT state_changed of zif_promise_state.
+*endclass.
+*
+*CLASS lcl_handler IMPLEMENTATION.
+*  METHODS constructor.
+*    me->handler  = handler.
+*    SET HANDLER on_state_changed for state.
+*  endmethod.
+*  METHOD on_state_changed.
+*    case sender->state.
+*      when sender->fulfilled.
+*        handler->on_fulfilled( sender->result ).
+*      when sender->rected.
+*        handler->on_rejected( sender->result ).
+*    endcase.
+*  endmethod.
+*ENDCLASS.

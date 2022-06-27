@@ -9,7 +9,7 @@ class tcl_main definition inheriting from zcl_abap_async
     methods test_no_resolution for testing.
     methods test_promise_all_true for testing.
     methods test_promise_all_false for testing.
-    METHODs test_ref FOR TESTING.
+    methods test_ref for testing.
     data on_fulfilled type abap_bool.
     data on_rejected type abap_bool.
 endclass.
@@ -53,23 +53,60 @@ class tcl_main implementation.
 
   method test_resolved.
 
-    new zcl_promise( new tcl_resolved( ) )->then( me ).
+    " this code will start a new session
+    data(promise) = new zcl_promise( new tcl_resolved( ) )->then( me ).
 
+    " however result is not yet here
+    " it should not be processed yet
+    cl_abap_unit_assert=>assert_false( on_fulfilled ).
+    cl_abap_unit_assert=>assert_false( on_rejected ).
+
+    " now we await for promise execution + validate result
+    try.
+        cl_abap_unit_assert=>assert_equals(
+          act = cast string( await( promise ) )->*
+          exp = tcl_resolved=>resolution ).
+      catch zcx_promise_rejected.
+        cl_abap_unit_assert=>fail( ).
+    endtry.
+
+    " and now we expect that is resolved
     cl_abap_unit_assert=>assert_true( on_fulfilled ).
     cl_abap_unit_assert=>assert_false( on_rejected ).
 
   endmethod.
 
   method test_rejected.
+    " this code will start a new session
+    data(promise) = new zcl_promise( new tcl_rejected( ) )->then( me ).
 
-    new zcl_promise( new tcl_rejected( ) )->then( me ).
+    " however result is not yet here
+    " it should not be processed yet
+    cl_abap_unit_assert=>assert_false( on_fulfilled ).
+    cl_abap_unit_assert=>assert_false( on_rejected ).
 
+    " now we await for promise execution + validate result
+    try.
+        await( promise ).
+        cl_abap_unit_assert=>fail( ).
+      catch zcx_promise_rejected into data(lo_cx).
+
+        cl_abap_unit_assert=>assert_equals(
+          act = cast string( lo_cx->with )->*
+          exp = tcl_rejected=>resolution ).
+
+    endtry.
+
+    " and now we expect that is resolved
     cl_abap_unit_assert=>assert_false( on_fulfilled ).
     cl_abap_unit_assert=>assert_true( on_rejected ).
+
 
   endmethod.
 
   method zif_promise_handler~on_fulfilled.
+
+    check with is bound.
 
     assign with->* to field-symbol(<lv_with>).
 
@@ -84,6 +121,8 @@ class tcl_main implementation.
   endmethod.
 
   method zif_promise_handler~on_rejected.
+
+    check with is bound.
 
     assign with->* to field-symbol(<lv_with>).
 
@@ -100,8 +139,9 @@ class tcl_main implementation.
   method test_no_resolution.
 
     try.
-        new zcl_promise( new tcl_dummy_resolver( ) )->then( ).
-        cl_abap_unit_assert=>fail( ).
+        new zcl_promise( new tcl_dummy_resolver( ) )->then( me ).
+        cl_abap_unit_assert=>assert_false( on_fulfilled ).
+        cl_abap_unit_assert=>assert_false( on_rejected ).
       catch zcx_promise_not_resolved.
     endtry.
 
@@ -150,7 +190,7 @@ class tcl_main implementation.
     try.
         data(lr_result) = cast string( await( lo_promise ) ).
         cl_abap_unit_assert=>fail( ).
-      catch zcx_promise_rejected INTO data(lo_cx).
+      catch zcx_promise_rejected into data(lo_cx).
 
         cl_abap_unit_assert=>assert_equals(
         exporting
@@ -162,11 +202,11 @@ class tcl_main implementation.
 
   endmethod.
 
-  METHOD test_ref.
+  method test_ref.
 
     cl_abap_unit_assert=>assert_true( cast abap_bool( ref=>from( abap_true ) )->* ).
     cl_abap_unit_assert=>assert_true( cast abap_bool( ref=>from( ref #( abap_true ) ) )->* ).
 
-  ENDMETHOD.
+  endmethod.
 
 endclass.

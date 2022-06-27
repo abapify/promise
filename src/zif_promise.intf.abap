@@ -7,7 +7,7 @@ interface ZIF_PROMISE
 
   methods THEN
     importing
-      !HANDLER type ref to ZIF_PROMISE_HANDLER optional
+      !HANDLER type ref to ZIF_PROMISE_HANDLER
     returning
       value(RESULT) type ref to ZIF_PROMISE .
 endinterface.

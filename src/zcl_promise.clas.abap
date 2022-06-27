@@ -40,6 +40,11 @@ protected section.
 private section.
 
   data STATE type ref to ZIF_PROMISE_STATE .
+  data:
+    HANDLERS TYPE TABLE OF REF TO zif_promise_handler WITH EMPTY KEY .
+
+  methods ON_STATE_CHANGED
+    for event STATE_CHANGED of ZIF_PROMISE_STATE .
 ENDCLASS.
 
 
@@ -83,7 +88,32 @@ CLASS ZCL_PROMISE IMPLEMENTATION.
         me->state = new zcl_abap_async_task( resolver )->state.
     endtry.
 
+    set HANDLER on_state_changed for me->state.
+
   endmethod.
+
+
+method on_state_changed.
+
+  " makes sense to process only if it's changed
+  check state->state ne state->pending.
+
+  loop at handlers into data(handler).
+
+    " delete handler if it's non-pending.
+    delete handlers index sy-tabix.
+    check handler is bound.
+
+    case state->state.
+      when state->fulfilled.
+        handler->on_fulfilled( state->result ).
+      when state->rejected.
+        handler->on_rejected( state->result ).
+    endcase.
+
+  endloop.
+
+endmethod.
 
 
   method reject.
@@ -102,25 +132,10 @@ CLASS ZCL_PROMISE IMPLEMENTATION.
 
   method zif_promise~then.
 
-    " await for promise execution
-    case state->state.
-      when state->pending.
-        try.
-            await( me ).
-          catch zcx_promise_rejected.
-            " this method should not raise exception but trigger needed callback
-        endtry.
-    endcase.
+    APPEND handler to handlers.
 
-    " callbacks
-    if handler is bound.
-      case state->state.
-        when state->fulfilled.
-          handler->on_fulfilled( state->result ).
-        when state->rejected.
-          handler->on_rejected( state->result ).
-      endcase.
-    endif.
+    " in case if state is not pending already
+    me->on_state_changed( ).
 
     " chaining support
     result = me.
