@@ -64,3 +64,71 @@ So when your code decides that it's time to get data from promise and only then 
 
 You may not see the desired effect for single operations - but for promise=>all call the effect can be huge!
 
+## And what about async/await?
+
+To use full power of promises we can also use await functions. 
+
+So mentioned above example may look a bit differently:
+
+```js
+async function() {
+console.log( await new Promise( ( resolve, reject ) => { resolve( 'OK' ) } ) ) // OK
+}
+```
+
+now works in ABAP
+```abap
+REPORT ZTEST_PROMISE_OK_AWAIT.
+
+" Promise Resolver
+" Must implement then method with mandatory resolve or reject method calls from inside
+CLASS lcl_ok DEFINITION INHERITING FROM zcl_promise_resolver.
+  PUBLIC SECTION.
+    METHODS then REDEFINITION.
+ENDCLASS.
+
+CLASS lcl_ok IMPLEMENTATION.
+  METHOD then.
+    " resolve is declared in zcl_promise_resolver
+    resolve( |OK| ).
+  ENDMETHOD.
+ENDCLASS.
+
+CLASS lcl_app DEFINITION INHERITING FROM zcl_abap_async.
+  PUBLIC SECTION.
+    METHODs start.
+ENDCLASS.
+
+CLASS lcl_app IMPLEMENTATION.
+  METHOD start.
+    " we expect result as ref to string
+    write cast string(
+      " in case if it's async class ( child of async )
+      " you can just use await of any promise
+      await( new zcl_promise( new lcl_ok( ) ) ) )->*.
+  ENDMETHOD.
+ENDCLASS.
+
+START-OF-SELECTION.
+  " start the app
+  new lcl_app( )->start( ).
+```
+
+## Other methods
+
+### Promise.all
+
+Returns a new promise, resolved with array of promises results or rejected with a reason of the first rejected promise
+
+### Promise=>race
+
+### Promise=>resolve
+
+Returns resolved promise
+
+### Promise=>reject
+
+Returns rejected promise
+
+### Promise=>all_settled
+
